@@ -10,6 +10,7 @@ export type ProviderConfig = {
   logoutRedirectPath: string
   responseType: string
   scope: string
+  tokenExpiryWarningSeconds?: number
 }
 
 type ProviderProps = {
@@ -20,6 +21,7 @@ type ProviderProps = {
     error: Error | undefined,
     isError: boolean,
     isLoading: boolean,
+    isTokenExpiring: boolean,
     loginAction: () => void,
     logoutAction: () => void
   ) => ReactNode
@@ -31,6 +33,7 @@ type ProviderState = {
   error?: Error
   isError: boolean
   isLoading: boolean
+  isTokenExpiring: boolean
 }
 
 export class Provider extends React.Component<ProviderProps, ProviderState> {
@@ -38,7 +41,14 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
 
   constructor(props: ProviderProps) {
     super(props)
-    this.state = { user: undefined, isLoggedIn: false, error: undefined, isError: false, isLoading: true }
+    this.state = {
+      user: undefined,
+      isLoggedIn: false,
+      error: undefined,
+      isError: false,
+      isLoading: true,
+      isTokenExpiring: false
+    }
 
     const { config } = props
     const settings = {
@@ -47,9 +57,18 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
       redirect_uri: config.clientOrigin + config.loginRedirectPath,
       post_logout_redirect_uri: config.clientOrigin + config.logoutRedirectPath,
       response_type: config.responseType,
-      scope: config.scope
+      scope: config.scope,
+      accessTokenExpiringNotificationTime: config.tokenExpiryWarningSeconds ? config.tokenExpiryWarningSeconds : 60
     }
     this.userManager = new UserManager(settings)
+
+    this.userManager.events.addAccessTokenExpiring(() => {
+      this.setState({ isTokenExpiring: true })
+    })
+
+    this.userManager.events.addAccessTokenExpired(() => {
+      this.setState({ user: undefined, isLoggedIn: false, isTokenExpiring: false })
+    })
 
     Log.logger = console
     Log.level = Log.DEBUG
@@ -119,6 +138,9 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
           if (user == null) {
             this.setState({ user: undefined, isLoggedIn: false, isLoading: false })
             console.log('User is NOT logged in')
+          } else if (user.expired) {
+            this.setState({ user: undefined, isLoggedIn: false, isLoading: false })
+            console.log('User login has expired')
           } else {
             this.setState({ user: user, isLoggedIn: true, isLoading: false })
             console.log('User: ', user)
@@ -133,13 +155,14 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
   }
 
   render() {
-    const { user, isLoggedIn, error, isError, isLoading } = this.state
+    const { user, isLoggedIn, error, isError, isLoading, isTokenExpiring } = this.state
     return this.props.children(
       user,
       isLoggedIn,
       error,
       isError,
       isLoading,
+      isTokenExpiring,
       this.signIn.bind(this),
       this.signOut.bind(this)
     )
