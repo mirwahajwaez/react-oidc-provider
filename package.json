@@ -2,11 +2,14 @@
   "name": "react-oidc-provider",
   "version": "0.1.0",
   "description": "A React component for authenticating users against a 3rd party OIDC provider",
-  "main": "index.js",
+  "main": "build/index.js",
   "scripts": {
     "build": "tsc",
     "test": "jest"
   },
+  "files": [
+    "build"
+  ],
   "keywords": [
     "React",
     "OIDC",
