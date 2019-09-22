@@ -62,16 +62,24 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
     }
     this.userManager = new UserManager(settings)
 
-    this.userManager.events.addAccessTokenExpiring(() => {
-      this.setState({ isTokenExpiring: true })
-    })
-
-    this.userManager.events.addAccessTokenExpired(() => {
-      this.setState({ user: undefined, isLoggedIn: false, isTokenExpiring: false })
-    })
+    this.userManager.events.addAccessTokenExpiring(this.accessTokenExpiring.bind(this))
+    this.userManager.events.addAccessTokenExpired(this.accessTokenExpired.bind(this))
 
     Log.logger = console
-    Log.level = Log.DEBUG
+    Log.level = Log.ERROR
+  }
+
+  accessTokenExpiring() {
+    this.setState({ isTokenExpiring: true })
+  }
+
+  accessTokenExpired() {
+    this.setState({ user: undefined, isLoggedIn: false, isTokenExpiring: false })
+  }
+
+  componentWillUnmount() {
+    this.userManager.events.removeAccessTokenExpiring(this.accessTokenExpiring.bind(this))
+    this.userManager.events.removeAccessTokenExpired(this.accessTokenExpired.bind(this))
   }
 
   signIn() {
@@ -101,6 +109,7 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
       }
     )
   }
+
   componentDidMount() {
     console.log('loading react-oidc-provider component...')
     this.setState({ isLoading: true })
