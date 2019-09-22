@@ -37,5 +37,8 @@
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
+  },
+  "dependencies": {
+    "oidc-client": "^1.9.1"
   }
 }
