@@ -1,0 +1,16 @@
+{
+  "name": "react-oidc-provider",
+  "version": "0.1.0",
+  "description": "A React component for authenticating users against a 3rd party OIDC provider",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "React",
+    "OIDC",
+    "authentication"
+  ],
+  "author": "Arif Datoo",
+  "license": "ISC"
+}
