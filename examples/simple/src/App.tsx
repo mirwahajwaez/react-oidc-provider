@@ -4,23 +4,23 @@ import { Provider, ProviderConfig } from 'react-oidc-provider'
 
 const config: ProviderConfig = {
   authority: 'https://demo.identityserver.io/',
-  clientID: 'implicit',
+  clientID: 'implicit.shortlived',
   clientOrigin: 'http://localhost:3000',
   loginRedirectPath: '/login_callback',
   logoutRedirectPath: '/logout_callback',
   scope: 'openid email profile',
-  responseType: 'id_token token'
+  responseType: 'id_token token',
+  tokenExpiryWarningSeconds: 60
 }
 
 const App: React.FC = () => {
   return (
     <Provider config={config}>
-      {(user, isLoggedIn, error, isError, isLoading, login, logout) => {
+      {(user, isLoggedIn, error, isError, isLoading, isTokenExpiring, login, logout) => {
         if (isError) {
           return (
             <>
               <p>There is an Error</p>
-              {error}
             </>
           )
         } else if (isLoading) {
@@ -37,6 +37,9 @@ const App: React.FC = () => {
             <>
               <p>User is Logged In</p>
               <p>User: {user && user.profile.name}</p>
+              <p>Token Expiring: {isTokenExpiring ? 'YES' : 'NO'}</p>
+              {isTokenExpiring && <button onClick={login}>Re-Authenticate</button>}
+              <br />
               <button onClick={logout}>Sign Out</button>
             </>
           )
