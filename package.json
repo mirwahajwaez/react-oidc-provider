@@ -4,6 +4,7 @@
   "description": "A React component for authenticating users against a 3rd party OIDC provider",
   "main": "index.js",
   "scripts": {
+    "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -12,5 +13,8 @@
     "authentication"
   ],
   "author": "Arif Datoo",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^3.6.3"
+  }
 }
