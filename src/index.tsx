@@ -13,10 +13,19 @@ export type ProviderConfig = {
   tokenExpiryWarningSeconds?: number
 }
 
+type ProviderUser = {
+  email: string
+  name: string
+  familyName: string
+  givenName: string
+  ipAddress: string
+  idToken: string
+}
+
 type ProviderProps = {
   config: ProviderConfig
   children: (
-    user: User | undefined,
+    user: ProviderUser | undefined,
     isLoggedIn: boolean,
     error: Error | undefined,
     isError: boolean,
@@ -28,7 +37,7 @@ type ProviderProps = {
 }
 
 type ProviderState = {
-  user?: User
+  user?: ProviderUser
   isLoggedIn: boolean
   error?: Error
   isError: boolean
@@ -117,9 +126,17 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
     if (window.location.pathname === this.props.config.loginRedirectPath) {
       this.userManager.signinRedirectCallback().then(
         (user: User) => {
-          this.setState({ user: user, isLoggedIn: true, isLoading: false })
+          const providerUser: ProviderUser = {
+            email: user.profile.email,
+            name: user.profile.name,
+            familyName: user.profile.family_name,
+            givenName: user.profile.given_name,
+            ipAddress: user.profile.ipaddr,
+            idToken: user.id_token
+          }
+          this.setState({ user: providerUser, isLoggedIn: true, isLoading: false })
           console.log('signin success')
-          console.log('User: ', user)
+          console.log('User: ', providerUser)
           history.replaceState(null, '', '/')
         },
         (error: Error) => {
@@ -151,8 +168,16 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
             this.setState({ user: undefined, isLoggedIn: false, isLoading: false })
             console.log('User login has expired')
           } else {
-            this.setState({ user: user, isLoggedIn: true, isLoading: false })
-            console.log('User: ', user)
+            const providerUser: ProviderUser = {
+              email: user.profile.email,
+              name: user.profile.name,
+              familyName: user.profile.family_name,
+              givenName: user.profile.given_name,
+              ipAddress: user.profile.ipaddr,
+              idToken: user.id_token
+            }
+            this.setState({ user: providerUser, isLoggedIn: true, isLoading: false })
+            console.log('User: ', providerUser)
           }
         },
         (error: Error) => {

@@ -36,7 +36,8 @@ const App: React.FC = () => {
           return (
             <>
               <p>User is Logged In</p>
-              <p>User: {user && user.profile.name}</p>
+              <p>User: {user && user.name}</p>
+              <p>eMail: {user && user.email}</p>
               <p>Token Expiring: {isTokenExpiring ? 'YES' : 'NO'}</p>
               {isTokenExpiring && <button onClick={login}>Re-Authenticate</button>}
               <br />
