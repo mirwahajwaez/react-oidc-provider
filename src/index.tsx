@@ -6,8 +6,6 @@ export type ProviderConfig = {
   authority: string
   clientID: string
   clientOrigin: string
-  loginRedirectPath: string
-  logoutRedirectPath: string
   responseType: string
   scope: string
   tokenExpiryWarningSeconds?: number
@@ -63,8 +61,8 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
     const settings = {
       authority: config.authority,
       client_id: config.clientID,
-      redirect_uri: config.clientOrigin + config.loginRedirectPath,
-      post_logout_redirect_uri: config.clientOrigin + config.logoutRedirectPath,
+      redirect_uri: config.clientOrigin,
+      post_logout_redirect_uri: config.clientOrigin,
       response_type: config.responseType,
       scope: config.scope,
       accessTokenExpiringNotificationTime: config.tokenExpiryWarningSeconds ? config.tokenExpiryWarningSeconds : 60
@@ -123,7 +121,7 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
     console.log('loading react-oidc-provider component...')
     this.setState({ isLoading: true })
 
-    if (window.location.pathname === this.props.config.loginRedirectPath) {
+    if (window.location.hash) {
       this.userManager.signinRedirectCallback().then(
         (user: User) => {
           const providerUser: ProviderUser = {
@@ -137,19 +135,6 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
           this.setState({ user: providerUser, isLoggedIn: true, isLoading: false })
           console.log('signin success')
           console.log('User: ', providerUser)
-          history.replaceState(null, '', '/')
-        },
-        (error: Error) => {
-          this.setState({ error: error, isError: true, isLoading: false })
-          console.error(error)
-          history.replaceState(null, '', '/')
-        }
-      )
-    } else if (window.location.pathname === this.props.config.logoutRedirectPath) {
-      this.userManager.signoutRedirectCallback().then(
-        () => {
-          this.setState({ user: undefined, isLoggedIn: false, isLoading: false })
-          console.log('signout success')
           history.replaceState(null, '', '/')
         },
         (error: Error) => {

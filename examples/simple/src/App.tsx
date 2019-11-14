@@ -6,8 +6,6 @@ const config: ProviderConfig = {
   authority: 'https://demo.identityserver.io/',
   clientID: 'implicit.shortlived',
   clientOrigin: 'http://localhost:3000',
-  loginRedirectPath: '/login_callback',
-  logoutRedirectPath: '/logout_callback',
   scope: 'openid email profile',
   responseType: 'id_token token',
   tokenExpiryWarningSeconds: 60
