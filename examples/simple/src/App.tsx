@@ -6,8 +6,6 @@ const config: ProviderConfig = {
   authority: 'https://demo.identityserver.io/',
   clientID: 'implicit.shortlived',
   clientOrigin: 'http://localhost:3000',
-  loginRedirectPath: '/login_callback',
-  logoutRedirectPath: '/logout_callback',
   scope: 'openid email profile',
   responseType: 'id_token token',
   tokenExpiryWarningSeconds: 60
@@ -36,7 +34,8 @@ const App: React.FC = () => {
           return (
             <>
               <p>User is Logged In</p>
-              <p>User: {user && user.profile.name}</p>
+              <p>User: {user && user.name}</p>
+              <p>eMail: {user && user.email}</p>
               <p>Token Expiring: {isTokenExpiring ? 'YES' : 'NO'}</p>
               {isTokenExpiring && <button onClick={login}>Re-Authenticate</button>}
               <br />
