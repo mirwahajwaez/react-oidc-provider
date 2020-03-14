@@ -1,6 +1,6 @@
 {
   "name": "react-oidc-provider",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A React component for authenticating users against a 3rd party OIDC provider",
   "main": "build/index.js",
   "author": "Arif Datoo <arif@datoos.com>",
@@ -26,7 +26,9 @@
     "format": "prettier --write --ignore-path .gitignore */**/*.{js,ts,tsx}"
   },
   "files": [
-    "build"
+    "build",
+    "README.md",
+    "LICENSE"
   ],
   "devDependencies": {
     "@types/jest": "^24.9.1",
