@@ -1,22 +1,33 @@
 {
   "name": "react-oidc-provider",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "A React component for authenticating users against a 3rd party OIDC provider",
   "main": "build/index.js",
+  "author": "Arif Datoo <arif@datoos.com>",
+  "homepage": "https://github.com/adatoo/react-oidc-provider",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adatoo/react-oidc-provider"
+  },
+  "bugs": {
+    "url": "https://github.com/adatoo/react-oidc-provider/issues"
+  },
+  "license": "MIT",
+  "keywords": [
+    "React",
+    "OAUTH2",
+    "OIDC",
+    "authentication"
+  ],
   "scripts": {
     "build": "tsc",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint --fix --ext .js,.jsx,.ts,.tsx --ignore-path .gitignore .",
+    "format": "prettier --write --ignore-path .gitignore */**/*.{js,ts,tsx}"
   },
   "files": [
     "build"
   ],
-  "keywords": [
-    "React",
-    "OIDC",
-    "authentication"
-  ],
-  "author": "Arif Datoo",
-  "license": "ISC",
   "devDependencies": {
     "@types/jest": "^24.9.1",
     "@types/react": "^16.9.23",
