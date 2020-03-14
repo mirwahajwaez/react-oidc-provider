@@ -19,6 +19,6 @@
     "noUnusedParameters": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["./src/**/*.tsx"],
+  "include": ["./src/**/*.tsx", "src/index.ts"],
   "exclude": ["node_modules", "build", "**/*.spec.tsx"]
 }

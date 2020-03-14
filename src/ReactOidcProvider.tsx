@@ -12,10 +12,10 @@ export type ProviderConfig = {
 }
 
 type ProviderUser = {
-  email: string
-  name: string
-  familyName: string
-  givenName: string
+  email?: string
+  name?: string
+  familyName?: string
+  givenName?: string
   ipAddress: string
   idToken: string
 }
@@ -30,7 +30,7 @@ type ProviderProps = {
     isLoading: boolean,
     isTokenExpiring: boolean,
     loginAction: () => void,
-    logoutAction: () => void
+    logoutAction: () => void,
   ) => ReactNode
 }
 
@@ -54,7 +54,7 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
       error: undefined,
       isError: false,
       isLoading: true,
-      isTokenExpiring: false
+      isTokenExpiring: false,
     }
 
     const { config } = props
@@ -65,7 +65,7 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
       post_logout_redirect_uri: config.clientOrigin,
       response_type: config.responseType,
       scope: config.scope,
-      accessTokenExpiringNotificationTime: config.tokenExpiryWarningSeconds ? config.tokenExpiryWarningSeconds : 60
+      accessTokenExpiringNotificationTime: config.tokenExpiryWarningSeconds ? config.tokenExpiryWarningSeconds : 60,
     }
     this.userManager = new UserManager(settings)
 
@@ -76,48 +76,7 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
     Log.level = Log.ERROR
   }
 
-  accessTokenExpiring() {
-    this.setState({ isTokenExpiring: true })
-  }
-
-  accessTokenExpired() {
-    this.setState({ user: undefined, isLoggedIn: false, isTokenExpiring: false })
-  }
-
-  componentWillUnmount() {
-    this.userManager.events.removeAccessTokenExpiring(this.accessTokenExpiring.bind(this))
-    this.userManager.events.removeAccessTokenExpired(this.accessTokenExpired.bind(this))
-  }
-
-  signIn() {
-    this.setState({ isLoading: true })
-
-    this.userManager.signinRedirect().then(
-      () => {
-        console.log('signin initiated...')
-      },
-      (error: Error) => {
-        this.setState({ error: error, isError: true, isLoading: false })
-        console.error(error)
-      }
-    )
-  }
-
-  signOut() {
-    this.setState({ isLoading: true })
-
-    this.userManager.signoutRedirect().then(
-      () => {
-        console.log('signout initiated...')
-      },
-      (error: Error) => {
-        this.setState({ error: error, isError: true, isLoading: false })
-        console.error(error)
-      }
-    )
-  }
-
-  componentDidMount() {
+  componentDidMount(): void {
     console.log('loading react-oidc-provider component...')
     this.setState({ isLoading: true })
 
@@ -130,18 +89,19 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
             familyName: user.profile.family_name,
             givenName: user.profile.given_name,
             ipAddress: user.profile.ipaddr,
-            idToken: user.id_token
+            idToken: user.id_token,
           }
           this.setState({ user: providerUser, isLoggedIn: true, isLoading: false })
           console.log('signin success')
           console.log('User: ', providerUser)
-          history.replaceState(null, '', '/')
+          console.log(user)
+          window.history.replaceState(null, '', '/')
         },
         (error: Error) => {
-          this.setState({ error: error, isError: true, isLoading: false })
+          this.setState({ error, isError: true, isLoading: false })
           console.error(error)
-          history.replaceState(null, '', '/')
-        }
+          window.history.replaceState(null, '', '/')
+        },
       )
     } else {
       this.userManager.getUser().then(
@@ -159,23 +119,66 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
               familyName: user.profile.family_name,
               givenName: user.profile.given_name,
               ipAddress: user.profile.ipaddr,
-              idToken: user.id_token
+              idToken: user.id_token,
             }
             this.setState({ user: providerUser, isLoggedIn: true, isLoading: false })
             console.log('User: ', providerUser)
+            console.log(user)
           }
         },
         (error: Error) => {
-          this.setState({ error: error, isError: true, isLoading: false })
+          this.setState({ error, isError: true, isLoading: false })
           console.error(error)
-        }
+        },
       )
     }
   }
 
-  render() {
+  componentWillUnmount(): void {
+    this.userManager.events.removeAccessTokenExpiring(this.accessTokenExpiring.bind(this))
+    this.userManager.events.removeAccessTokenExpired(this.accessTokenExpired.bind(this))
+  }
+
+  accessTokenExpiring(): void {
+    this.setState({ isTokenExpiring: true })
+  }
+
+  accessTokenExpired(): void {
+    this.setState({ user: undefined, isLoggedIn: false, isTokenExpiring: false })
+  }
+
+  signIn(): void {
+    this.setState({ isLoading: true })
+
+    this.userManager.signinRedirect().then(
+      () => {
+        console.log('signin initiated...')
+      },
+      (error: Error) => {
+        this.setState({ error, isError: true, isLoading: false })
+        console.error(error)
+      },
+    )
+  }
+
+  signOut(): void {
+    this.setState({ isLoading: true })
+
+    this.userManager.signoutRedirect().then(
+      () => {
+        console.log('signout initiated...')
+      },
+      (error: Error) => {
+        this.setState({ error, isError: true, isLoading: false })
+        console.error(error)
+      },
+    )
+  }
+
+  render(): React.ReactNode {
+    const { children } = this.props
     const { user, isLoggedIn, error, isError, isLoading, isTokenExpiring } = this.state
-    return this.props.children(
+    return children(
       user,
       isLoggedIn,
       error,
@@ -183,7 +186,7 @@ export class Provider extends React.Component<ProviderProps, ProviderState> {
       isLoading,
       isTokenExpiring,
       this.signIn.bind(this),
-      this.signOut.bind(this)
+      this.signOut.bind(this),
     )
   }
 }
