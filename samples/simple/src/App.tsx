@@ -8,7 +8,7 @@ const config: ProviderConfig = {
   clientOrigin: 'http://localhost:3000',
   scope: 'openid email profile',
   responseType: 'id_token token',
-  tokenExpiryWarningSeconds: 60
+  tokenExpiryWarningSeconds: 60,
 }
 
 const App: React.FC = () => {
