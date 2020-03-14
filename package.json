@@ -18,27 +18,37 @@
   "author": "Arif Datoo",
   "license": "ISC",
   "devDependencies": {
-    "@types/jest": "^24.0.18",
-    "@types/react": "^16.9.2",
-    "@types/react-dom": "^16.9.0",
-    "@types/react-test-renderer": "^16.9.0",
+    "@types/jest": "^24.9.1",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
+    "@types/react-test-renderer": "^16.9.2",
+    "@typescript-eslint/eslint-plugin": "^2.21.0",
+    "@typescript-eslint/parser": "^2.21.0",
+    "eslint-config-airbnb-typescript": "^7.0.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-react": "^7.18.3",
+    "eslint-plugin-react-hooks": "^2.4.0",
     "jest": "^24.9.0",
-    "react": "^16.9.0",
-    "react-dom": "^16.9.0",
-    "react-scripts": "^3.1.2",
-    "react-test-renderer": "^16.9.0",
-    "ts-jest": "^24.1.0",
-    "typescript": "^3.6.3"
+    "prettier": "^1.19.1",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-scripts": "^3.4.0",
+    "react-test-renderer": "^16.13.0",
+    "ts-jest": "^24.3.0",
+    "typescript": "^3.8.3"
   },
   "peerDependencies": {
     "react": "^16.8.0",
     "react-dom": "^16.8.0"
   },
+  "dependencies": {
+    "oidc-client": "^1.10.1"
+  },
   "jest": {
     "preset": "ts-jest",
     "testEnvironment": "node"
-  },
-  "dependencies": {
-    "oidc-client": "^1.9.1"
   }
 }
